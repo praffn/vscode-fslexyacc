@@ -1,0 +1,41 @@
+{
+  "name": "fslexyacc",
+  "displayName": "fslexyacc",
+  "description": "Syntax highlighting for FsLexYacc",
+  "version": "0.0.1",
+  "publisher": "praffn",
+  "engines": {
+    "vscode": "^1.28.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "fslex",
+        "aliases": ["FsLex"],
+        "extensions": [".fsl"],
+        "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "fsyacc",
+        "aliases": ["FsYacc"],
+        "extensions": [".fsy"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "fslex",
+        "scopeName": "source.fslex",
+        "path": "./syntaxes/fslex.tmLanguage.json"
+      },
+      {
+        "language": "fsyacc",
+        "scopeName": "source.fsyacc",
+        "path": "./syntaxes/fsyacc.tmLanguage.json"
+      }
+    ]
+  }
+}

@@ -1,0 +1,142 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+
+  "name": "FSYacc",
+  "scopeName": "source.fsyacc",
+  "fileTypes": ["fsy"],
+
+  "patterns": [
+    { "include": "#grammar.before" },
+    { "include": "#grammar.rules" }
+  ],
+
+  "repository": {
+
+    "string.double_quote": {
+      "name": "string.quoted.double.fsyacc",
+      "begin": "\"",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.fsyacc" }
+      },
+      "end": "\"",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.fsyacc" }
+      },
+      "patterns": [
+        { "include": "source.c#string_escaped_char" },
+        { "include": "source.c#string_placeholder" }
+      ]
+    },
+
+    "string.single_quote": {
+      "name": "string.quoted.single.fsyacc",
+      "begin": "'",
+      "beginCapture": {
+        "0": { "name": "punctuation.definition.string.begin.fsyacc" }
+      },
+      "end": "'",
+      "endCapture": {
+        "0": { "name": "punctuation.definition.string.end.fsyacc" }
+      },
+      "patterns": [
+        { "include": "source.c#string_escaped_char" }
+      ]
+    },
+
+    "special_identifiers": {
+      "comment": "special identfiers",
+      "match": "[@$](\\d+|\\$)",
+      "name": "support.variable.fsyacc"
+    },
+
+    "header": {
+      "comment": "header fsharp section",
+      "begin": "^%{",
+      "beginCaptures": {
+        "0": { "name": "punctuation.separator.tag.section.fsyacc" }
+      },
+      "end": "^%}",
+      "endCaptures": {
+        "0": { "name": "punctuation.separator.tag.section.fsyacc" }
+      },
+      "patterns": [
+        { "include": "source.fsharp" }
+      ]
+    },
+
+    "grammar.before": {
+      "patterns": [
+        { "include": "#header" },
+        { "include": "#options" }
+      ]
+    },
+
+    "options": {
+      "patterns": [
+        { "include": "source.c#comments" },
+        { "include": "#string.double_quote" },
+        { "include": "#string.single_quote" },
+        { "include": "#options_type" },
+        { "include": "#options_basic" }
+      ]
+    },
+
+    "options_basic": {
+      "match": "^%(left|right|nonassoc|token|start)",
+      "name": "keyword.source.fsyacc"
+    },
+
+    "options_type": {
+      "match": "(^%(?:token|type))\\s*\\<(.*?)\\>",
+      "captures": {
+        "1": { "name": "keyword.source.fsyacc" },
+        "2": { "name": "support.type.fsyacc" }
+      }
+    },
+
+    "grammar.rules": {
+      "begin": "^%%",
+      "beginCaptures": {
+        "0": { "name": "punctuation.separator.tag.section.fsyacc" }
+      },
+      "patterns": [
+        { "include": "#grammar.after" },
+        { "include": "#rule" }
+      ]
+    },
+
+    "rule": {
+      "comment": "rules",
+      "begin": "(_?[\\w\\-_]*[\\w\\d\\-_]\\w*):",
+      "beginCaptures": {
+        "1": { "name": "variable.language.fsyacc" }
+      },
+      "end": ";",
+      "patterns": [
+        { "include": "#rule.code" },
+        { "include": "#string.single_quote" },
+        { "include": "#string.double_quote" }
+      ]
+    },
+
+    "rule.code": {
+      "comment": "the rule code is the fsharp code that is executed if case matches",
+      "begin": "{",
+      "end": "}",
+      "name": "fsharp.fsyacc",
+      "patterns": [
+        { "include": "source.fsharp" }
+      ]
+    },
+
+    "grammar.after": {
+      "begin": "^%%",
+      "beginCaptures": {
+        "0": { "name": "punctuation.separator.tag.section.fsyacc" }
+      },
+      "patterns": [
+        { "include": "source.fsharp" }
+      ]
+    }
+  }
+}
