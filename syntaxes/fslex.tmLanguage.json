@@ -1,84 +1,70 @@
 {
-	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
 
   "name": "FSLex",
   "scopeName": "source.fslex",
   "fileTypes": ["fsl"],
 
-	"patterns": [
+  "patterns": [
     {
-      "comment": "FsLex header (F# code)",
-      "begin": "{",
-      "end": "}",
+      "comment": "fsharp header",
+      "begin": "\\A{$",
+      "end": "}$",
       "patterns": [
         { "include": "source.fsharp" }
       ]
     },
     {
-      "comment": "keywords"
-    },
-
-    { "include": "#comment" },
-
-    {
-      "comment": "keywords",
-      "match": "\\b(let|rule|parse)\\b",
-      "name": "keyword.other.fslex"
+      "comment": "line comment",
+      "match": "//.*\\n",
+      "name": "comment.line.double-slash.fslex"
     },
     {
-      "comment": "operator keywords",
-      "match": "\\b(=|\\|)\\b",
-      "name": "keyword.control.fslex"
+      "match": "(let)\\s+([A-Za-z]+)\\s*(=)\\s*(.+)\\n",
+      "captures": {
+        "1": { "name": "keyword.other.fsyacc" },
+        "2": { "name": "variable.other.fsyacc" },
+        "3": { "name": "keyword.other.assignment.fsyacc" },
+        "4": {
+          "patterns": [
+            { "include": "#identifier" },
+            { "include": "#regex" },
+            { "include": "#string_single_quote" }
+          ]
+        }
+      }
+    }
+
+
+  ],
+  "repository": {
+    "identifier": {
+      "match": "[A-Za-z][A-Za-z0-9_]*",
+      "name": "variable.other.fsyacc"
     },
 
-    { "include": "#stringLiteral" },
-    { "include": "#charLiteral" }
-	],
-	"repository": {
-    "comment": {
-      "comment": "comments",
-      "patterns": [
-        {
-          "comment": "line comment",
-          "match": "//.*$\\n",
-          "name": "comment.line.double-slash.fslex"
-        },
-        {
-          "comment": "block comment",
-          "begin": "\\(\\*",
-          "end": "\\*\\)",
-          "name": "comment.block.fslex"
-        }
-      ]
+    "regex": {
+
     },
-    "regexp": {
-      "comment": "a fslex regex",
-      "patterns": [
-        { "include": "#stringLiteral" },
-        { "include": "#charLiteral" }
-      ]
-    },
-    "stringLiteral": {
-      "begin": "\"",
-      "end": "\"",
-      "name": "string.quoted.double.fslex",
-      "patterns": [
-        {
-          "match": "\\\\.",
-          "name": "constant.character.escape.fslex"
-        }
-      ]
-    },
-    "charLiteral": {
+
+    "string_single_quote": {
       "begin": "'",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.fsyacc" }
+      },
       "end": "'",
-      "name": "string.quoted.single.fslex",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.fsyacc" }
+      },
       "patterns": [
         {
-          "match": "\\\\.",
-          "name": "constant.character.escape.fslex"
+          "match": ".+",
+          "name": "string.quoted.single.fsyacc",
+          "patterns": [
+            { "match": "\\.+", "name": "constant.character.escape.fsyacc" }
+          ]
         }
       ]
     }
-	}
+  }
 }
